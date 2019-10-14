@@ -77,7 +77,7 @@ namespace ADGetAvailableComputerName
             return ComputerNames;
         }
 
-        private static void SearchForComputerTest(DirectoryEntry de, string prevPrefix = "", int prevCnt = 0)
+        private static void SearchForComputerTest(DirectoryEntry de, string prevPrefix = "", int prevCnt = 0, int prevLength = 0)
         {
             Console.Write($"Search for computer{(prevPrefix != "" ? $" [{prevPrefix}]" : "")}: ");
             string prefix = Console.ReadLine();
@@ -103,6 +103,9 @@ namespace ADGetAvailableComputerName
                 }
             }
 
+            Console.Write($"Number length{(prevLength != 0 ? $"[{prevLength}]" : "")}: ");
+            int length = GetIntFromConsoleRead();
+
             GlobalCatalog gc = Forest.GetCurrentForest().FindGlobalCatalog();
             DirectorySearcher ds = gc.GetDirectorySearcher();
 
@@ -112,14 +115,19 @@ namespace ADGetAvailableComputerName
 
             while (true)
             {
-                ds.Filter = $"(&(ObjectCategory=computer)(name={prefix}{cnt}))";
+                string scnt = cnt.ToString();
+
+                while (scnt.Length < length)
+                    scnt = $"0{scnt}";
+
+                ds.Filter = $"(&(ObjectCategory=computer)(name={prefix}{scnt}))";
                 //DirectorySearcher ds = new DirectorySearcher(de,$"(&(ObjectCategory=computer)(name={Console.ReadLine()}))");
 
                 SearchResultCollection resultCollection = ds.FindAll();
 
                 if (resultCollection.Count == 0)
                 {
-                    openNamesList.Add($"{prefix}{cnt}");
+                    openNamesList.Add($"{prefix}{scnt}");
 
                     if (openNamesList.Count == 10)
                         break;
@@ -139,7 +147,7 @@ namespace ADGetAvailableComputerName
             if (consoleKeyInfo.Key == ConsoleKey.Y)
             {
                 Console.WriteLine();
-                SearchForComputerTest(de, prefix, startingCnt);
+                SearchForComputerTest(de, prefix, startingCnt, length);
             }
         }
 
