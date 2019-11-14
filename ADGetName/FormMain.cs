@@ -1,20 +1,91 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.DirectoryServices;
+using System.DirectoryServices.ActiveDirectory;
 using System.Windows.Forms;
 
 namespace ADGetName
 {
     public partial class FormMain : Form
     {
+        private readonly SearchSettings _searchSettings = SearchSettings.Default;
+        private int _lastSearchedNumber;
+
         public FormMain()
         {
             InitializeComponent();
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            Update();
+
+            textBoxComputerName.Text = _searchSettings.ComputerName;
+            numericUpDownStartNumber.Value = _searchSettings.StartingNumber;
+            numericUpDownNumberLength.Value = _searchSettings.StartingNumber;
+        }
+
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+            SearchForComputerName((int)numericUpDownStartNumber.Value);
+        }
+
+        private void SearchForComputerName(int startingNumber, bool clearList = true)
+        {
+            buttonSearch.Enabled = false;
+
+            GlobalCatalog globalCatalog = Forest.GetCurrentForest().FindGlobalCatalog();
+            DirectorySearcher directorySearcher = globalCatalog.GetDirectorySearcher();
+
+            if(clearList)
+                listBoxAvailableNames.Items.Clear();
+
+            while (true)
+            {
+                string number = startingNumber.ToString();
+
+                while (number.Length < numericUpDownNumberLength.Value)
+                {
+                    number = $"0{number}";
+                }
+
+                directorySearcher.Filter = $"(&(ObjectCategory=computer)(name={textBoxComputerName.Text}{number}))";
+
+                SearchResultCollection searchResultCollection = directorySearcher.FindAll();
+
+                if (searchResultCollection.Count == 0)
+                {
+                    listBoxAvailableNames.Items.Add($"{textBoxComputerName.Text}{number}");
+                    Update();
+
+                    if (listBoxAvailableNames.Items.Count == 10)
+                    {
+                        _lastSearchedNumber = startingNumber;
+                        break;
+                    }
+                }
+
+                startingNumber++;
+            }
+
+            buttonSearch.Enabled = true;
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _searchSettings.ComputerName = textBoxComputerName.Text;
+            _searchSettings.StartingNumber = numericUpDownStartNumber.Value;
+            _searchSettings.NumberLength = numericUpDownStartNumber.Value;
+            _searchSettings.Save();
+        }
+
+        private void listBoxAvailableNames_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                listBoxAvailableNames.Items.RemoveAt(listBoxAvailableNames.SelectedIndex);
+
+                SearchForComputerName(++_lastSearchedNumber, false);
+            }
         }
     }
 }
