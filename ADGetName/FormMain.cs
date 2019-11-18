@@ -80,7 +80,7 @@ namespace ADGetName
 
         private void listBoxAvailableNames_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete)
+            if (e.KeyCode == Keys.Delete && listBoxAvailableNames.SelectedItem != null)
             {
                 listBoxAvailableNames.Items.RemoveAt(listBoxAvailableNames.SelectedIndex);
 
