@@ -21,7 +21,7 @@ namespace ADGetName
 
             textBoxComputerName.Text = _searchSettings.ComputerName;
             numericUpDownStartNumber.Value = _searchSettings.StartingNumber;
-            numericUpDownNumberLength.Value = _searchSettings.StartingNumber;
+            numericUpDownNumberLength.Value = _searchSettings.NumberLength;
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
@@ -74,7 +74,7 @@ namespace ADGetName
         {
             _searchSettings.ComputerName = textBoxComputerName.Text;
             _searchSettings.StartingNumber = numericUpDownStartNumber.Value;
-            _searchSettings.NumberLength = numericUpDownStartNumber.Value;
+            _searchSettings.NumberLength = numericUpDownNumberLength.Value;
             _searchSettings.Save();
         }
 
