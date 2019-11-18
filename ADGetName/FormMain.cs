@@ -82,9 +82,11 @@ namespace ADGetName
         {
             if (e.KeyCode == Keys.Delete && listBoxAvailableNames.SelectedItem != null)
             {
-                listBoxAvailableNames.Items.RemoveAt(listBoxAvailableNames.SelectedIndex);
+                int selectedIndex = listBoxAvailableNames.SelectedIndex;
+                listBoxAvailableNames.Items.RemoveAt(selectedIndex);
 
                 SearchForComputerName(++_lastSearchedNumber, false);
+                listBoxAvailableNames.SelectedIndex = selectedIndex;
             }
         }
 
