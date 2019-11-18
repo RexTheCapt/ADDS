@@ -87,5 +87,31 @@ namespace ADGetName
                 SearchForComputerName(++_lastSearchedNumber, false);
             }
         }
+
+        private void contextMenuStripComputerNameActions_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            contextMenuStripComputerNameActions.Items.Clear();
+
+            if (listBoxAvailableNames.SelectedItem != null)
+            {
+                string selectedName = listBoxAvailableNames.Items[listBoxAvailableNames.SelectedIndex].ToString();
+
+                ToolStripItem copy = contextMenuStripComputerNameActions.Items.Add($"Copy {selectedName}");
+                ToolStripItem delete = contextMenuStripComputerNameActions.Items.Add($"Delete {selectedName}");
+
+                copy.Click += ContextCopyComputerName;
+                delete.Click += ContextDeleteComputerName;
+            }
+        }
+
+        private void ContextDeleteComputerName(object sender, EventArgs e)
+        {
+            listBoxAvailableNames_KeyDown(listBoxAvailableNames, new KeyEventArgs(Keys.Delete));
+        }
+
+        private void ContextCopyComputerName(object sender, EventArgs e)
+        {
+            Clipboard.SetText(listBoxAvailableNames.Items[listBoxAvailableNames.SelectedIndex].ToString());
+        }
     }
 }

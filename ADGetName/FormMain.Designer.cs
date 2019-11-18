@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBoxComputerName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownStartNumber = new System.Windows.Forms.NumericUpDown();
@@ -36,6 +37,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.listBoxAvailableNames = new System.Windows.Forms.ListBox();
             this.buttonSearch = new System.Windows.Forms.Button();
+            this.contextMenuStripComputerNameActions = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberLength)).BeginInit();
             this.SuspendLayout();
@@ -95,6 +97,7 @@
             // 
             // listBoxAvailableNames
             // 
+            this.listBoxAvailableNames.ContextMenuStrip = this.contextMenuStripComputerNameActions;
             this.listBoxAvailableNames.FormattingEnabled = true;
             this.listBoxAvailableNames.Location = new System.Drawing.Point(15, 119);
             this.listBoxAvailableNames.Name = "listBoxAvailableNames";
@@ -111,6 +114,12 @@
             this.buttonSearch.Text = "Search";
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
+            // 
+            // contextMenuStripComputerNameActions
+            // 
+            this.contextMenuStripComputerNameActions.Name = "contextMenuStripComputerNameActions";
+            this.contextMenuStripComputerNameActions.Size = new System.Drawing.Size(181, 26);
+            this.contextMenuStripComputerNameActions.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripComputerNameActions_Opening);
             // 
             // FormMain
             // 
@@ -147,6 +156,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox listBoxAvailableNames;
         private System.Windows.Forms.Button buttonSearch;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripComputerNameActions;
     }
 }
 
